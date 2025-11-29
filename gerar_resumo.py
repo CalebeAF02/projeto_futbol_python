@@ -1,0 +1,117 @@
+# gerar_resumo.py
+
+import os
+
+# Conteúdo que será escrito no arquivo de texto
+CONTEUDO_RESUMO = """
+================================================================
+          RESUMO DA SESSÃO DE DEBUG E REFACTOR (UNB-TP1)
+================================================================
+
+O principal desafio encontrado foi um problema sutil de Mapeamento de Argumentos (MRO) em Herança Múltipla, onde a Habilidade (int) estava sendo passada acidentalmente para a classe Nome (str).
+
+A solução definitiva é o uso do padrão super() em todas as classes base para garantir um encadeamento de inicialização colaborativo.
+
+--- ARQUIVOS ENVIADOS E VERIFICADOS ---
+
+1. sistema/controlador_sistema.py (Lógica do Menu e I/O)
+
+class ControladorSistema:
+    # ...
+    def _contratar_jogadores(self):
+        print("\\n--- 1. CONTRATAR JOGADORES ---")
+        try:
+            nome = input("Nome: ")
+            posicao = input("Posição (goleiro/defensor/meia/atacante): ")
+            habilidade = int(input("Habilidade (0-10): "))
+            
+            # Chamada que inicia o processo: CORRETA na ordem (str, str, int)
+            novo_jogador = self._servico.contratar_jogador(nome, posicao, habilidade)
+            print(f"🎉 Contratado com sucesso: {novo_jogador}")
+            # ...
+        except (ValueError, TypeError) as e:
+            print(f"❌ Erro na contratação: {e}")
+
+2. sistema/servico.py (Lógica de Negócio)
+
+class ServicoTime(IServico):
+    # ...
+    def contratar_jogador(self, nome: str, posicao: str, habilidade: int) -> Jogador:
+        # AQUI FOI RECOMENDADO USAR ARGUMENTOS NOMEADOS PARA ISOLAR O ERRO MRO
+        novo_jogador = Jogador(
+            nome=nome, 
+            posicao=posicao, 
+            habilidade=habilidade
+        )
+        self._persistencia.adicionar_jogador(novo_jogador)
+        return novo_jogador
+    # ...
+
+3. objetos/jogador.py (Herança Múltipla)
+
+# Versão Original do Usuário (Causadora do MRO-break)
+class Jogador(Nome, Posicao, Habilidade):
+    def __init__(self, nome: str, posicao: str, habilidade: int):
+        Nome.__init__(self, nome)
+        Posicao.__init__(self, posicao)
+        Habilidade.__init__(self, habilidade)
+    # ...
+
+--- LOG DE ERRO CRÍTICO ---
+
+O erro inicial:
+🚨 Ocorreu um erro no sistema: 'int' object has no attribute 'lower'
+
+O erro após a primeira correção (Type Check):
+❌ Erro na contratação: Erro no Domínio: Nome deve ser string (str), mas recebeu 'int'.
+(Confirma problema de MRO/Mapeamento de argumentos)
+
+--- SOLUÇÃO FINAL RECOMENDADA: REFACTOR MRO ---
+
+Para eliminar o erro de 'int' no lugar de 'str' em herança múltipla, é obrigatório usar o padrão super() colaborativo em todas as classes base.
+
+1. REFACTOR NAS CLASSES BASE (Nome, Posicao, Habilidade)
+
+# objetos/nome.py (Aplicar em Posicao e Habilidade também)
+class Nome(IValidacao):
+    def __init__(self, nome: str, **kwargs): 
+        super().__init__(**kwargs) # Necessário para passar a cadeia MRO
+        self._nome = self.validar(nome) 
+        # ...
+
+2. REFACTOR NA CLASSE FILHA (Jogador)
+
+# objetos/jogador.py (VERSÃO FINAL E ROBUSTA)
+class Jogador(Nome, Posicao, Habilidade):
+    def __init__(self, nome: str, posicao: str, habilidade: int):
+        # Chamada ÚNICA e colaborativa, eliminando a dependência da ordem posicional
+        super().__init__(
+            nome=nome,
+            posicao=posicao,
+            habilidade=habilidade
+        )
+        
+    def __str__(self):
+        # ...
+        return (f"Nome: {self.get_nome().capitalize()} | Posição: {self.get_posicao().capitalize()} "
+                f"| Habilidade: {self.get_habilidade()}/10")
+
+================================================================
+"""
+
+def gerar_arquivo_resumo():
+    """Cria um arquivo .txt com o resumo da sessão de debug."""
+    nome_arquivo = "resumo_debug_futebol.txt"
+    try:
+        with open(nome_arquivo, 'w', encoding='utf-8') as f:
+            f.write(CONTEUDO_RESUMO)
+        
+        print(f"✅ Arquivo '{nome_arquivo}' gerado com sucesso!")
+        print(f"Ele está localizado em: {os.path.abspath(nome_arquivo)}")
+        print("\nAplique as correções MRO (padrão super()) no seu projeto e tente executar novamente.")
+        
+    except IOError as e:
+        print(f"❌ Erro ao criar o arquivo: {e}")
+
+if __name__ == "__main__":
+    gerar_arquivo_resumo()
