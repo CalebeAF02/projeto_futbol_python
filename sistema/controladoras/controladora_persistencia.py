@@ -1,9 +1,9 @@
-from sistema.interface_servico import IPersistencia
+from ..interfaces.interface_persistencia import InterfacePersistencia
 from typing import List, Dict
-from objetos.jogador import Jogador
+from objetos.entidades.jogador import Jogador
 from libs.utilidades import inserir_ordenado # Vamos criar essa função na pasta 'libs'
 
-class PersistenciaEmMemoria(IPersistencia):
+class ControladoraPersistencia(InterfacePersistencia):
     def __init__(self):
         # A estrutura de dados principal (o elenco)
         self.elenco: Dict[str, List[Jogador]] = {

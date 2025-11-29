@@ -1,5 +1,5 @@
 from typing import List, Dict
-from objetos.jogador import Jogador
+from objetos.entidades.jogador import Jogador
 
 class Formatacao:
     

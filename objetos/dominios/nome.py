@@ -1,4 +1,4 @@
-from objetos.interface_validacao import IValidacao
+from ..interface_validacao import IValidacao
 
 class Nome(IValidacao):
     def __init__(self, nome: str): 

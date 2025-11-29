@@ -1,6 +1,6 @@
 # sistema/controlador_sistema.py
 
-from sistema.servico import ServicoTime
+from sistema.controladoras.controladora_servico import ControladoraServico
 from libs.formatacao import Formatacao
 from typing import List, Dict
 
@@ -11,7 +11,7 @@ class ControladorSistema:
     """
     def __init__(self):
         # Inicializa a camada de serviço (e, consequentemente, a persistência)
-        self._servico = ServicoTime()
+        self._servico = ControladoraServico()
         self._executando = False
 
     def iniciar(self):

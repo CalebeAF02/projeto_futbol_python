@@ -1,6 +1,6 @@
-from objetos.nome import Nome
-from objetos.posicao import Posicao
-from objetos.habilidade import Habilidade
+from ..dominios.nome import Nome
+from ..dominios.posicao import Posicao
+from ..dominios.habilidade import Habilidade
 
 # Classe Jogador herda as características (atributos) e os métodos Set/Get
 class Jogador(Nome, Posicao, Habilidade):

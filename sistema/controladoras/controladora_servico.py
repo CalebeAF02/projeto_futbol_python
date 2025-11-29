@@ -1,12 +1,13 @@
-from sistema.interface_servico import IServico, IPersistencia
-from sistema.persistencia import PersistenciaEmMemoria # Construtor Persistência
-from objetos.jogador import Jogador
+from ..interfaces.interface_servico import InterfaceServico
+from ..interfaces.interface_persistencia import InterfacePersistencia
+from .controladora_persistencia import ControladoraPersistencia # Construtor Persistência
+from objetos.entidades.jogador import Jogador
 from typing import List, Dict
 
-class ServicoTime(IServico):
-    def __init__(self, persistencia: IPersistencia = None):
+class ControladoraServico(InterfaceServico):
+    def __init__(self, persistencia: InterfacePersistencia = None):
         # Injeção de dependência: Permite trocar a persistência (ex: para testes)
-        self._persistencia = persistencia if persistencia is not None else PersistenciaEmMemoria()
+        self._persistencia = persistencia if persistencia is not None else ControladoraPersistencia()
 
 
     def contratar_jogador(self, nome: str, posicao: str, habilidade: int) -> Jogador:

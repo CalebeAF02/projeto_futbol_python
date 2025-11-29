@@ -1,4 +1,4 @@
-from objetos.interface_validacao import IValidacao
+from ..interface_validacao import IValidacao
 
 class Posicao(IValidacao):
     POSICOES_VALIDAS = ['goleiro', 'defensor', 'meia', 'atacante']

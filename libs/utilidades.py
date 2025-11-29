@@ -1,5 +1,5 @@
 from typing import List
-from objetos.jogador import Jogador
+from objetos.entidades.jogador import Jogador
 
 def inserir_ordenado(lista_posicao: List[Jogador], novo_jogador: Jogador):
     """

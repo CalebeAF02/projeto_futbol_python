@@ -1,4 +1,4 @@
-from objetos.interface_validacao import IValidacao
+from ..interface_validacao import IValidacao
 
 class Habilidade(IValidacao):
     def __init__(self, habilidade: int): 
